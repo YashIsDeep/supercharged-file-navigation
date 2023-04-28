@@ -272,6 +272,7 @@ export async function activate(context: vscode.ExtensionContext) {
       [
         { scheme: "file", language: "javascript" },
         { scheme: "file", language: "typescript" },
+        { scheme: "file", language: "typescriptreact" },
       ],
       new CustomDefinitionProvider()
     )

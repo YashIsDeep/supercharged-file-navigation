@@ -5,7 +5,7 @@
   "publisher": "YashdeepGupta",
   "description": "Navigate between files in a breeze, no waiting for TS servers to load.",
   "repository": "https://github.com/YashIsDeep/supercharged-file-navigation",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.70.0"
   },
@@ -13,7 +13,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished",
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {
