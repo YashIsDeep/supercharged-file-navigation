@@ -14,8 +14,6 @@
   ],
   "activationEvents": [
     "onStartupFinished",
-    "onLanguage:javascript",
-    "onLanguage:typescript"
   ],
   "main": "./dist/extension.js",
   "contributes": {
