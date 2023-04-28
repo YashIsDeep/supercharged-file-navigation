@@ -21,13 +21,21 @@
   "contributes": {
     "languages": [
       {
+        "id": "typescriptreact",
+        "aliases": [
+          "tsx"
+        ],
+        "extensions": [
+          ".tsx"
+        ]
+      },
+      {
         "id": "typescript",
         "aliases": [
           "ts"
         ],
         "extensions": [
-          ".ts",
-          ".tsx"
+          ".ts"
         ]
       },
       {
@@ -36,8 +44,7 @@
           "js"
         ],
         "extensions": [
-          ".js",
-          ".jsx"
+          ".js"
         ]
       }
     ]
