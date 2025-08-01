@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import * as path from "path";
 
+import { parse as CjsonParse } from "comment-json";
+
 // helpers
 import { removeAsteriskFromEnd } from "./helpers/removeAsteriskFromEnd";
 import { checkFileExists } from "./helpers/checkFileExists";
@@ -25,7 +27,8 @@ export async function computeAliases(): Promise<void> {
       .readFile(tsconfigFile)
       .then((data) => data.toString());
     tsconfigFilePaths.push(path.dirname(tsconfigFile.fsPath));
-    const tsconfig = JSON.parse(tsconfigString);
+    console.log(`Found tsconfig file: ${tsconfigFile.fsPath}`, tsconfigString);
+    const tsconfig = CjsonParse(tsconfigString) as any;
     const baseUrl = tsconfig.compilerOptions?.baseUrl ?? ".";
 
     if (tsconfig.compilerOptions && tsconfig.compilerOptions.paths) {
@@ -142,11 +145,11 @@ export async function findValidResolvedPath(
   }
 
   if (await checkFileExists(resolvedPath + "/package.json")) {
-    const packageJsonContents = JSON.parse(
+    const packageJsonContents = CjsonParse(
       await vscode.workspace.fs
         .readFile(vscode.Uri.file(resolvedPath + "/package.json"))
         .then((data) => data.toString())
-    );
+    ) as any;
 
     return findValidResolvedPath(
       path.join(resolvedPath, packageJsonContents.main),
@@ -178,7 +181,7 @@ export async function findValidResolvedPath(
       prefix + "/node_modules/@types/" + resolvedPath + "/package.json";
     if (await checkFileExists(nodeModulesTypingsRootResolution)) {
       try {
-        const packageJson = JSON.parse(
+        const packageJson = CjsonParse(
           await vscode.workspace.fs
             .readFile(vscode.Uri.file(nodeModulesTypingsRootResolution))
             .then((data) => data.toString())
@@ -222,12 +225,12 @@ export async function findValidResolvedPath(
   */
 }
 
-class CustomDefinitionProvider {
+class CustomDefinitionProvider implements vscode.DefinitionProvider {
   public async provideDefinition(
     document: vscode.TextDocument,
     position: vscode.Position,
     token: vscode.CancellationToken
-  ): Promise<vscode.DefinitionLink[] | null> {
+  ): Promise<vscode.Definition | vscode.DefinitionLink[] | null> {
     const originSelectionRange = document.getWordRangeAtPosition(
       position,
       /[^'"]+/g
