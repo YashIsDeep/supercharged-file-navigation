@@ -5,7 +5,7 @@
   "publisher": "YashdeepGupta",
   "description": "Navigate between files in a breeze, no waiting for TS servers to load.",
   "repository": "https://github.com/YashIsDeep/supercharged-file-navigation",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.70.0"
   },
@@ -56,7 +56,9 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "make-vsix": "npx vsce package --no-yarn",
+    "publish-vsix": "npx vsce publish --no-yarn"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
