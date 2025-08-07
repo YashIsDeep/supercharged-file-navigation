@@ -6,6 +6,7 @@ import { parse as CjsonParse } from "comment-json";
 // helpers
 import { removeAsteriskFromEnd } from "./helpers/removeAsteriskFromEnd";
 import { checkFileExists } from "./helpers/checkFileExists";
+import { retryWithBackoff } from "./helpers/retryWithBackOff";
 
 let computeAliasesPromise: Promise<void> | undefined;
 let tsconfigFilePaths: string[] = [];
@@ -17,9 +18,8 @@ export async function computeAliases(): Promise<void> {
   }
 
   console.time("computeAliases");
-  const tsconfigFiles = await vscode.workspace.findFiles(
-    "**/tsconfig.json",
-    "**/node_modules/**"
+  const tsconfigFiles = await retryWithBackoff(() =>
+    vscode.workspace.findFiles("**/tsconfig.json", "**/node_modules/**")
   );
 
   for (const tsconfigFile of tsconfigFiles) {
@@ -64,7 +64,6 @@ export async function computeAliases(): Promise<void> {
 
   return Promise.resolve();
 }
-computeAliasesPromise = computeAliases();
 
 export function getImportResolverMetadata(document: vscode.TextDocument): {
   documentFilePath: string;
@@ -268,7 +267,9 @@ class CustomDefinitionProvider implements vscode.DefinitionProvider {
 }
 
 export async function activate(context: vscode.ExtensionContext) {
-  await computeAliases();
+  computeAliasesPromise = computeAliases();
+
+  await computeAliasesPromise;
 
   context.subscriptions.push(
     vscode.languages.registerDefinitionProvider(
